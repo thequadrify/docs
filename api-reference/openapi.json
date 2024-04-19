@@ -1,194 +1,644 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
+    "title": "Quadrify API",
+    "version": "1.0.0",
+    "description": "API to manage your Quadrify Project."
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://app.quadrify.io/api"
     }
   ],
   "security": [
     {
-      "bearerAuth": []
+      "BearerAuth": []
     }
   ],
   "paths": {
-    "/plants": {
+    "/sales": {
+      "post": {
+        "summary": "Creates a new sale entry for a specific provider.",
+        "description": "This endpoint is used to register a new sale through an external provider.",
+        "operationId": "createSale",
+        "tags": [
+          "Sales"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Sale"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sale created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data."
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      },
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
+        "summary": "List sales entries.",
+        "description": "This endpoint is used to list sales entries with pagination support.",
+        "operationId": "listSales",
+        "tags": [
+          "Sales"
+        ],
         "parameters": [
           {
-            "name": "limit",
+            "name": "take",
             "in": "query",
-            "description": "The maximum number of results to return",
+            "description": "Number of sales to return.",
+            "required": false,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "default": 10
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of sales to skip before starting to collect the result set.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "A list of sales.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
+                  "type": "object",
+                  "properties": {
+                    "sales": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Sale"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of sales in the database."
+                    }
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
+            "description": "Invalid request parameters."
           },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
+          "401": {
+            "description": "Authorization information is missing or invalid."
           },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+          "500": {
+            "description": "Internal server error."
           }
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/contacts": {
+      "get": {
+        "summary": "List contacts",
+        "description": "This endpoint is used to list contacts with pagination support.",
+        "operationId": "listContacts",
+        "tags": [
+          "Contacts"
+        ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
+            "name": "take",
+            "in": "query",
+            "description": "Number of contacts to return.",
+            "required": false,
             "schema": {
               "type": "integer",
-              "format": "int64"
+              "default": 10
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of contacts to skip before starting to collect the result set.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0
             }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
+          "200": {
+            "description": "A list of contacts.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "object",
+                  "properties": {
+                    "contacts": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Contact"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of contacts in the database."
+                    }
+                  }
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid request parameters."
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "List Products",
+        "description": "Retrieves a list of products, with support for pagination.",
+        "parameters": [
+          {
+            "name": "take",
+            "in": "query",
+            "description": "Number of products to take.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of products to skip before starting to collect the result set.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paginated list of products.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Product"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of products."
+                    },
+                    "page": {
+                      "type": "integer",
+                      "description": "Current page number."
+                    },
+                    "pageSize": {
+                      "type": "integer",
+                      "description": "Number of products per page."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters."
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/ad-campaigns": {
+      "get": {
+        "summary": "Get a list of Ad Campaigns",
+        "description": "Retrieve a paginated list of Ad Campaigns using pagination with take and offset.",
+        "parameters": [
+          {
+            "name": "take",
+            "in": "query",
+            "description": "Number of Ad Campaigns to retrieve.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of Ad Campaigns to skip before starting to collect the result set.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paginated list of Ad Campaigns.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdCampaign"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of Ad Campaigns."
+                    },
+                    "offset": {
+                      "type": "integer",
+                      "description": "Offset value used in the request."
+                    },
+                    "take": {
+                      "type": "integer",
+                      "description": "Number of Ad Campaigns requested."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters."
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid."
+          },
+          "500": {
+            "description": "Internal server error."
           }
         }
       }
     }
   },
   "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
+      "Sale": {
         "type": "object",
         "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
+          "providerId": {
+            "type": "string",
+            "description": "Unique identifier of the provider."
           },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
+          "providerType": {
+            "type": "string",
+            "description": "Type of the provider."
           },
-          {
-            "required": [
-              "id"
+          "providerFee": {
+            "type": "number",
+            "description": "Fee charged by the provider."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "APPROVED",
+              "CHARGEBACK",
+              "REFUNDED",
+              "REFUND_REQUESTED",
+              "WAITING_PAYMENT",
+              "PROCESSING",
+              "REFUSED"
             ],
+            "description": "Current status of the sale."
+          },
+          "paymentMethod": {
+            "type": "string",
+            "enum": [
+              "CREDIT_CARD",
+              "PIX",
+              "BOLETO",
+              "TRANSFER"
+            ],
+            "description": "Method of payment used."
+          },
+          "paymentInstallments": {
+            "type": "number",
+            "default": 1,
+            "description": "Number of payment installments."
+          },
+          "amount": {
+            "type": "number",
+            "description": "Total amount of the sale."
+          },
+          "product": {
             "type": "object",
             "properties": {
               "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number",
+                "nullable": true
               }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
+            },
+            "required": [
+              "id",
+              "name"
+            ]
           },
-          "message": {
-            "type": "string"
+          "customer": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "email"
+            ]
+          },
+          "approvedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Timestamp when the sale was approved."
+          },
+          "refundedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Timestamp when the sale was refunded."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Timestamp when the sale was created."
           }
         }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      },
+      "Contact": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the contact."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the contact."
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address of the contact."
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true,
+            "description": "Phone number of the contact, if available."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the contact was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the contact was last updated."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email"
+        ]
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the product."
+          },
+          "providerType": {
+            "type": "string",
+            "description": "Type of the provider."
+          },
+          "providerId": {
+            "type": "string",
+            "description": "Identifier of the provider."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the product."
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Description of the product."
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "nullable": true,
+            "description": "Price of the product."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the product was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the product was last updated."
+          }
+        },
+        "required": [
+          "id",
+          "providerType",
+          "providerId",
+          "name"
+        ]
+      },
+      "AdCampaign": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the campaign."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the campaign."
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of the campaign."
+          },
+          "providerType": {
+            "type": "string",
+            "description": "Type of the provider."
+          },
+          "providerId": {
+            "type": "string",
+            "description": "Identifier of the provider."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the campaign was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the campaign was last updated."
+          },
+          "spend": {
+            "type": "number",
+            "description": "Total spend on the campaign."
+          },
+          "cpm": {
+            "type": "number",
+            "description": "Cost per thousand impressions."
+          },
+          "clicks": {
+            "type": "number",
+            "description": "Total number of clicks."
+          },
+          "impressions": {
+            "type": "number",
+            "description": "Total number of impressions."
+          },
+          "ctr": {
+            "type": "number",
+            "description": "Click-through rate."
+          },
+          "pageViews": {
+            "type": "number",
+            "description": "Total number of page views."
+          },
+          "checkout": {
+            "type": "number",
+            "description": "Total number of checkouts."
+          },
+          "sales": {
+            "type": "number",
+            "description": "Total number of sales."
+          },
+          "connectRate": {
+            "type": "number",
+            "description": "Connection rate."
+          },
+          "offerMagnetism": {
+            "type": "number",
+            "description": "Offer magnetism."
+          },
+          "costPerClick": {
+            "type": "number",
+            "description": "Cost per click."
+          },
+          "costPerCheckout": {
+            "type": "number",
+            "description": "Cost per checkout."
+          },
+          "costPerConversion": {
+            "type": "number",
+            "description": "Cost per conversion."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "status",
+          "providerType",
+          "providerId",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "SaleResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the sale record."
+          },
+          "message": {
+            "type": "string",
+            "description": "Information about the creation of the sale."
+          }
+        },
+        "required": [
+          "id",
+          "message"
+        ]
       }
     }
   }

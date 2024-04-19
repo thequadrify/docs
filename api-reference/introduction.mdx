@@ -1,33 +1,24 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: Introdução
+description: 'Bem-vindo à documentação da API Quadrify. Aqui você encontrará todas as informações necessárias para integrar nossa plataforma em outros serviços.'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Começando
 
-## Welcome
+Para começar a utilizar a API Quadrify, é essencial entender como realizar a autenticação e fazer chamadas aos endpoints disponíveis.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+### Autenticação
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+Todas as requisições à API devem ser autenticadas utilizando o seguinte cabeçalho HTTP:
+```Authorization: Bearer <YOUR_API_TOKEN>```
 
-## Authentication
+Substitua `<YOUR_API_TOKEN>` pelo seu token de acesso pessoal.
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+### Fazendo chamadas à API
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+Para fazer uma chamada à API, você precisará usar o método HTTP apropriado para o endpoint desejado. A maioria dos endpoints da API Quadrify suporta os métodos `GET`, `POST`, `PUT`, e `DELETE`.
+
+#### Exemplo de chamada `GET`
+
+Para recuperar informações de um recurso específico, você pode fazer uma chamada `GET`. Por exemplo, para obter uma lista de contatos, você usaria:
+
