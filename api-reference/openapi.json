@@ -153,18 +153,9 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "contacts": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Contact"
-                      }
-                    },
-                    "total": {
-                      "type": "integer",
-                      "description": "Total number of contacts in the database."
-                    }
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Contact"
                   }
                 }
               }
