@@ -46,13 +46,10 @@
             }
           },
           "400": {
-            "description": "Invalid request parameters."
+            "description": "Invalid request data."
           },
           "401": {
             "description": "Authorization information is missing or invalid."
-          },
-          "403": {
-            "description": "Authorization token is invalid."
           },
           "500": {
             "description": "Internal server error."
@@ -94,9 +91,18 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Sale"
+                  "type": "object",
+                  "properties": {
+                    "sales": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Sale"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of sales in the database."
+                    }
                   }
                 }
               }
@@ -107,9 +113,6 @@
           },
           "401": {
             "description": "Authorization information is missing or invalid."
-          },
-          "403": {
-            "description": "Authorization token is invalid."
           },
           "500": {
             "description": "Internal server error."
@@ -176,9 +179,6 @@
           "401": {
             "description": "Authorization information is missing or invalid."
           },
-          "403": {
-            "description": "Authorization token is invalid."
-          },
           "500": {
             "description": "Internal server error."
           }
@@ -217,9 +217,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Product"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Product"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of products."
+                    },
+                    "page": {
+                      "type": "integer",
+                      "description": "Current page number."
+                    },
+                    "pageSize": {
+                      "type": "integer",
+                      "description": "Number of products per page."
+                    }
                   }
                 }
               }
@@ -231,8 +248,74 @@
           "401": {
             "description": "Authorization information is missing or invalid."
           },
-          "403": {
-            "description": "Authorization token is invalid."
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/ad-campaigns": {
+      "get": {
+        "summary": "Get a list of Ad Campaigns",
+        "description": "Retrieve a paginated list of Ad Campaigns using pagination with take and offset.",
+        "parameters": [
+          {
+            "name": "take",
+            "in": "query",
+            "description": "Number of Ad Campaigns to retrieve.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of Ad Campaigns to skip before starting to collect the result set.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paginated list of Ad Campaigns.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdCampaign"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of Ad Campaigns."
+                    },
+                    "offset": {
+                      "type": "integer",
+                      "description": "Offset value used in the request."
+                    },
+                    "take": {
+                      "type": "integer",
+                      "description": "Number of Ad Campaigns requested."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters."
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid."
           },
           "500": {
             "description": "Internal server error."
@@ -540,29 +623,6 @@
           "updatedAt"
         ]
       },
-      "SaleStatus": {
-        "type": "string",
-        "enum": [
-          "APPROVED",
-          "CHARGEBACK",
-          "REFUNDED",
-          "REFUND_REQUESTED",
-          "WAITING_PAYMENT",
-          "PROCESSING",
-          "REFUSED"
-        ],
-        "description": "Defines the status of a sale."
-      },
-      "SalePaymentMethod": {
-        "type": "string",
-        "enum": [
-          "CREDIT_CARD",
-          "PIX",
-          "BOLETO",
-          "TRANSFER"
-        ],
-        "description": "Defines the payment methods available for a sale."
-      },
       "SaleResponse": {
         "type": "object",
         "properties": {
@@ -570,67 +630,14 @@
             "type": "string",
             "description": "Unique identifier of the sale record."
           },
-          "providerId": {
+          "message": {
             "type": "string",
-            "description": "Unique identifier of the provider."
-          },
-          "providerType": {
-            "type": "string",
-            "description": "Type of the provider."
-          },
-          "providerFee": {
-            "type": "number",
-            "description": "Fee charged by the provider."
-          },
-          "status": {
-            "$ref": "#/components/schemas/SaleStatus",
-            "description": "Current status of the sale."
-          },
-          "paymentMethod": {
-            "$ref": "#/components/schemas/SalePaymentMethod",
-            "description": "Method of payment used."
-          },
-          "paymentInstallments": {
-            "type": "number",
-            "description": "Number of payment installments."
-          },
-          "amount": {
-            "type": "number",
-            "description": "Total amount of the sale."
-          },
-          "product": {
-            "$ref": "#/components/schemas/Product",
-            "description": "Product details associated with the sale."
-          },
-          "customer": {
-            "$ref": "#/components/schemas/Contact",
-            "description": "Customer details associated with the sale."
-          },
-          "approvedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Date and time when the sale was approved."
-          },
-          "refundedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Date and time when the sale was refunded."
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Date and time when the sale record was created."
+            "description": "Information about the creation of the sale."
           }
         },
         "required": [
           "id",
-          "providerId",
-          "providerType",
-          "providerFee",
-          "status",
-          "paymentMethod",
-          "paymentInstallments",
-          "amount"
+          "message"
         ]
       }
     }
