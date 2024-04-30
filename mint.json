@@ -52,6 +52,13 @@
       "pages": [
         "api-reference/endpoint/products/get"
       ]
+    },
+    {
+      "group": "Ad Campaigns",
+      "pages": [
+        "api-reference/endpoint/ad-campaigns/get",
+        "api-reference/endpoint/ad-campaigns/get-insights"
+      ]
     }
   ],
   "footerSocials": {
