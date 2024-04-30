@@ -230,6 +230,65 @@
           }
         }
       }
+    },
+    "/ad-campaigns": {
+      "get": {
+        "summary": "List ad campaigns",
+        "description": "Returns a paginated list of ad campaigns.",
+        "operationId": "listAdCampaigns",
+        "tags": [
+          "Ad Campaigns"
+        ],
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Start date filter for ad campaigns (ISO 8601 format).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate", 
+            "in": "query",
+            "description": "End date filter for ad campaigns (ISO 8601 format).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paginated list of ad campaigns.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdCampaign"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters."
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid."
+          },
+          "403": {
+            "description": "Authorization token is invalid."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
     }
   },
   "components": {
@@ -519,6 +578,10 @@
           "costPerConversion": {
             "type": "number",
             "description": "Cost per conversion."
+          },
+          "costPerPageView": {
+            "type": "number",
+            "description": "Cost per page view."
           }
         },
         "required": [
